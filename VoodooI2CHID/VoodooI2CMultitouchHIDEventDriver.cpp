@@ -7,6 +7,7 @@
 //
 
 #include "VoodooI2CMultitouchHIDEventDriver.hpp"
+#include "VoodooInputMultitouch/VoodooInputMessages.h"
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/hid/IOHIDInterface.h>
 #include <IOKit/usb/USBSpec.h>
@@ -60,8 +61,48 @@ bool VoodooI2CMultitouchHIDEventDriver::didTerminate(IOService* provider, IOOpti
 }
 
 void VoodooI2CMultitouchHIDEventDriver::forwardReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
-    if (multitouch_interface)
-        multitouch_interface->handleInterruptReport(event, timestamp);
+    //if (multitouch_interface)
+    //    multitouch_interface->handleInterruptReport(event, timestamp);
+
+    if (voodooInputInstance) {
+        //VoodooInputEvent* message = new VoodooInputEvent;
+        
+        VoodooInputEvent message;
+
+        message.timestamp = timestamp;
+        message.contact_count = event.contact_count;
+        
+       for(int i = 0; i < event.contact_count; i++) {
+            VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i);
+            
+            VoodooInputTransducer* inputTransducer = &message.transducers[i];
+            
+            if (!transducer) {
+                continue;
+            }
+            
+            inputTransducer->id = transducer->id;
+            inputTransducer->secondaryId = transducer->secondary_id;
+            
+            inputTransducer->type = VoodooInputTransducerType::FINGER;
+            
+            inputTransducer->isValid = transducer->is_valid;
+            inputTransducer->isTransducerActive = transducer->tip_switch.value();
+            inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
+            
+            inputTransducer->currentCordinates.x = transducer->coordinates.x.value();
+            inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
+            
+            inputTransducer->currentCordinates.y = transducer->coordinates.y.value();
+            inputTransducer->previousCoordinates.y = transducer->coordinates.y.last.value;
+            
+            inputTransducer->currentCordinates.pressure = transducer->tip_pressure.value();
+        }
+        
+        super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
+        
+        //voodooInputInstance->message(kIOMessageVoodooInputMessage, this, &event);
+    }
 }
 
 UInt32 VoodooI2CMultitouchHIDEventDriver::getElementValue(IOHIDElement* element) {
@@ -364,6 +405,8 @@ bool VoodooI2CMultitouchHIDEventDriver::handleStart(IOService* provider) {
         return false;
     }
     
+    voodooInputInstance = NULL;
+    
     hid_interface = OSDynamicCast(IOHIDInterface, provider);
 
     if (!hid_interface)
@@ -522,6 +565,9 @@ IOReturn VoodooI2CMultitouchHIDEventDriver::parseDigitizerElement(IOHIDElement* 
                         }
 
                         multitouch_interface->physical_max_x = physical_max_x;
+                        
+                        setProperty(VOODOO_INPUT_LOGICAL_MAX_X_KEY, multitouch_interface->logical_max_x, 32);
+                        setProperty(VOODOO_INPUT_PHYSICAL_MAX_X_KEY, physical_max_x, 32);
                     }
                 } else if (sub_element->conformsTo(kHIDPage_GenericDesktop, kHIDUsage_GD_Y)) {
                     if (multitouch_interface && !multitouch_interface->logical_max_y) {
@@ -544,9 +590,15 @@ IOReturn VoodooI2CMultitouchHIDEventDriver::parseDigitizerElement(IOHIDElement* 
                         }
                         
                         multitouch_interface->physical_max_y = physical_max_y;
+                        
+                        setProperty(VOODOO_INPUT_LOGICAL_MAX_Y_KEY, multitouch_interface->logical_max_y, 32);
+                        setProperty(VOODOO_INPUT_PHYSICAL_MAX_Y_KEY, physical_max_y, 32);
                     }
                 }
             }
+            
+            setProperty(kIOFBTransformKey, 0ull, 32);
+            setProperty("VoodooInputSupported", kOSBooleanTrue);
 
             continue;
         }
@@ -964,4 +1016,22 @@ bool VoodooI2CMultitouchHIDEventDriver::notificationHIDAttachedHandler(void * re
                             newService, notifier);
 
     return true;
+}
+
+
+bool VoodooI2CMultitouchHIDEventDriver::handleOpen(IOService *forClient, IOOptionBits options, void *arg) {
+    
+    if (forClient && forClient->getProperty(VOOODOO_INPUT_IDENTIFIER)) {
+        voodooInputInstance = forClient;
+        voodooInputInstance->retain();
+        
+        return true;
+    }
+
+    return super::handleOpen(forClient, options, arg);
+}
+
+void VoodooI2CMultitouchHIDEventDriver::handleClose(IOService *forClient, IOOptionBits options) {
+    OSSafeReleaseNULL(voodooInputInstance);
+    super::handleClose(forClient, options);
 }

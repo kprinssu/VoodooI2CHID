@@ -242,6 +242,9 @@ class VoodooI2CMultitouchHIDEventDriver : public IOHIDEventService {
      * @return kIOReturnSuccess if the properties are received successfully, otherwise kIOUnsupported
      */
     virtual IOReturn setProperties(OSObject * properties);
+    
+    bool handleOpen(IOService *forClient, IOOptionBits options, void *arg) override;
+    void handleClose(IOService *forClient, IOOptionBits options) override;
 
  protected:
     const char* name;
@@ -254,6 +257,7 @@ class VoodooI2CMultitouchHIDEventDriver : public IOHIDEventService {
     virtual void forwardReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
 
  private:
+    IOService* voodooInputInstance;
     SInt32 absolute_axis_removal_percentage = 15;
     
     bool ignore_all;

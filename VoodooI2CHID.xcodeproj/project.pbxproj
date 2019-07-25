@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4E9F1E831F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E9F1E811F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.cpp */; };
 		4E9F1E841F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4E9F1E821F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.hpp */; };
+		7B49AC3722E4A25200E50879 /* VoodooInputEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B49AC3522E4A25200E50879 /* VoodooInputEvent.h */; };
+		7B49AC3822E4A25200E50879 /* VoodooInputMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B49AC3622E4A25200E50879 /* VoodooInputMessages.h */; };
+		7B49AC3A22E4A25F00E50879 /* VoodooInputTransducer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B49AC3922E4A25F00E50879 /* VoodooInputTransducer.h */; };
 		AC01EE9C201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC01EE9A201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.cpp */; };
 		AC01EE9D201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC01EE9B201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.hpp */; };
 		AC01EEA0201E2BAB005A2988 /* VoodooI2CSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC01EE9E201E2BAB005A2988 /* VoodooI2CSensor.cpp */; };
@@ -34,6 +37,9 @@
 /* Begin PBXFileReference section */
 		4E9F1E811F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CTouchscreenHIDEventDriver.cpp; sourceTree = "<group>"; };
 		4E9F1E821F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CTouchscreenHIDEventDriver.hpp; sourceTree = "<group>"; };
+		7B49AC3522E4A25200E50879 /* VoodooInputEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooInputEvent.h; sourceTree = "<group>"; };
+		7B49AC3622E4A25200E50879 /* VoodooInputMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooInputMessages.h; sourceTree = "<group>"; };
+		7B49AC3922E4A25F00E50879 /* VoodooInputTransducer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooInputTransducer.h; sourceTree = "<group>"; };
 		AC01EE9A201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CAccelerometerSensor.cpp; path = Sensors/VoodooI2CAccelerometerSensor.cpp; sourceTree = "<group>"; };
 		AC01EE9B201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CAccelerometerSensor.hpp; path = Sensors/VoodooI2CAccelerometerSensor.hpp; sourceTree = "<group>"; };
 		AC01EE9E201E2BAB005A2988 /* VoodooI2CSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CSensor.cpp; path = Sensors/VoodooI2CSensor.cpp; sourceTree = "<group>"; };
@@ -70,6 +76,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7B49AC3222E4A22700E50879 /* VoodooInputMultitouch */ = {
+			isa = PBXGroup;
+			children = (
+				7B49AC3622E4A25200E50879 /* VoodooInputMessages.h */,
+				7B49AC3922E4A25F00E50879 /* VoodooInputTransducer.h */,
+				7B49AC3522E4A25200E50879 /* VoodooInputEvent.h */,
+			);
+			path = VoodooInputMultitouch;
+			sourceTree = "<group>";
+		};
 		AC0DE5D51F4FFB4B006149C8 = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +106,7 @@
 		AC0DE5E11F4FFB4B006149C8 /* VoodooI2CHID */ = {
 			isa = PBXGroup;
 			children = (
+				7B49AC3222E4A22700E50879 /* VoodooInputMultitouch */,
 				AC0E6284201A612800A31157 /* Sensors */,
 				AC0DE5EC1F4FFDB2006149C8 /* VoodooI2CHIDDevice.cpp */,
 				AC0DE5ED1F4FFDB2006149C8 /* VoodooI2CHIDDevice.hpp */,
@@ -138,9 +155,12 @@
 				AC6388CD201B8E9F005E1341 /* VoodooI2CDeviceOrientationSensor.hpp in Headers */,
 				AC0ADA352017C2DC004DB693 /* VoodooI2CStylusHIDEventDriver.hpp in Headers */,
 				4E9F1E841F8AFECD00E91849 /* VoodooI2CTouchscreenHIDEventDriver.hpp in Headers */,
+				7B49AC3A22E4A25F00E50879 /* VoodooInputTransducer.h in Headers */,
 				AC01EEA1201E2BAB005A2988 /* VoodooI2CSensor.hpp in Headers */,
+				7B49AC3722E4A25200E50879 /* VoodooInputEvent.h in Headers */,
 				AC0DE5EF1F4FFDB2006149C8 /* VoodooI2CHIDDevice.hpp in Headers */,
 				AC0E628C201A629A00A31157 /* VoodooI2CSensorHubEventDriver.hpp in Headers */,
+				7B49AC3822E4A25200E50879 /* VoodooInputMessages.h in Headers */,
 				AC01EE9D201E2B7D005A2988 /* VoodooI2CAccelerometerSensor.hpp in Headers */,
 				AC0B0C561FFB08600039AC33 /* VoodooI2CHIDTransducerWrapper.hpp in Headers */,
 			);
